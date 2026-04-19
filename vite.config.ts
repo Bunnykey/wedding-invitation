@@ -14,14 +14,16 @@ import {
 } from "./src/const"
 
 const distFolder = "build"
+const homepage = pkg.homepage || "/"
+const previewImageUrl = `${homepage.replace(/\/$/, "")}/preview_image_v2.png`
 
 let base = "/"
 
 try {
-  const url = new URL(pkg.homepage)
+  const url = new URL(homepage)
   base = url.pathname
 } catch (e) {
-  base = pkg.homepage || "/"
+  base = homepage
 }
 
 // https://vite.dev/config/
@@ -35,6 +37,8 @@ export default defineConfig({
           GROOM_FULLNAME,
           BRIDE_FULLNAME,
           DESCRIPTION: `${WEDDING_DATE.format(WEDDING_DATE_FORMAT)} ${LOCATION}`,
+          HOMEPAGE: homepage,
+          PREVIEW_IMAGE_URL: previewImageUrl,
         },
       },
     }),
