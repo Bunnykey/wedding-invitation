@@ -15,7 +15,7 @@ import {
 
 const distFolder = "build"
 const homepage = pkg.homepage || "/"
-const previewImageUrl = `${homepage.replace(/\/$/, "")}/preview_image_v2.png`
+const previewImageUrl = `${homepage.replace(/\/$/, "")}/preview_image_v3.png`
 
 let base = "/"
 
