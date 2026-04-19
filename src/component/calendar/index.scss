@@ -1,4 +1,9 @@
 .calendar {
+  .wedding-date-copy {
+    color: rgba(61, 56, 50, 0.78);
+    margin-bottom: 0.7rem;
+  }
+
   .calendar-wrapper {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -16,6 +21,15 @@
         background-color: var(--light-grey-color);
       }
 
+      &.saturday {
+        background-color: rgba(111, 142, 175, 0.12);
+
+        > span {
+          color: var(--point-blue-color);
+          font-weight: 700;
+        }
+      }
+
       &.holiday {
         > span {
           color: var(--red-color);
@@ -27,12 +41,14 @@
 
         > span {
           z-index: 1;
+          color: var(--point-blue-color);
+          font-weight: 700;
         }
 
         > div.heart {
           width: 50%;
           height: 50%;
-          background: var(--theme-bg-color);
+          background: var(--point-blue-soft-color);
           top: 35%;
           left: 25%;
           position: absolute;
@@ -46,7 +62,7 @@
             top: -50%;
             left: 0%;
             border-radius: 50%;
-            background: var(--theme-bg-color);
+            background: var(--point-blue-soft-color);
           }
           &::after {
             content: "";
@@ -55,7 +71,7 @@
             position: absolute;
             left: -50%;
             border-radius: 50%;
-            background: var(--theme-bg-color);
+            background: var(--point-blue-soft-color);
           }
         }
       }
@@ -91,7 +107,8 @@
       margin-top: 2rem;
       margin-bottom: 1.5rem;
       .d-day {
-        color: var(--theme-color);
+        color: var(--point-blue-color);
+        font-weight: 700;
       }
     }
   }

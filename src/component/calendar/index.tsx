@@ -44,7 +44,7 @@ export const Calendar = () => {
     <LazyDiv className="card calendar">
       <h2 className="english">The Wedding Day</h2>
       <div className="break" />
-      {WEDDING_DATE.format(WEDDING_DATE_FORMAT)}
+      <div className="wedding-date-copy">{WEDDING_DATE.format(WEDDING_DATE_FORMAT)}</div>
       <div className="calendar-wrapper">
         <div className="head holiday">
           <span>Su</span>
@@ -64,7 +64,7 @@ export const Calendar = () => {
         <div className="head">
           <span>Fr</span>
         </div>
-        <div className="head">
+        <div className="head saturday">
           <span>Sa</span>
         </div>
         {Array.from({ length: firstDayOfWeek }).map((_, i) => (
