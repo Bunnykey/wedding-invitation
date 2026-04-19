@@ -9,7 +9,7 @@ dayjs.locale("ko")
 
 export { dayjs }
 
-export const WEDDING_DATE = dayjs.tz("2026-08-15 13:00", "Asia/Seoul")
+export const WEDDING_DATE = dayjs.tz("2026-08-15 13:30", "Asia/Seoul")
 export const WEDDING_DATE_FORMAT = `YYYY년 MMMM D일 dddd A h시${WEDDING_DATE.minute() === 0 ? "" : " m분"}`
 
 // 예식 당월 휴무일. 켈린더에 표시하기 위함.
@@ -37,8 +37,8 @@ export const KMAP_PLACE_ID = 1804498588
 export const BRIDE_FULLNAME = "채나율"
 export const BRIDE_FIRSTNAME = "나율"
 export const BRIDE_TITLE = "장녀"
-export const BRIDE_FATHER = "채문희"
-export const BRIDE_MOTHER = ""
+export const BRIDE_FATHER = ""
+export const BRIDE_MOTHER = "채문희"
 export const BRIDE_INFO = [
   {
     relation: "신부",
@@ -47,8 +47,8 @@ export const BRIDE_INFO = [
     account: "국민은행 000000000000",
   },
   {
-    relation: "신부 아버지",
-    name: BRIDE_FATHER,
+    relation: "신부 어머니",
+    name: BRIDE_MOTHER,
     phone: "010-0000-0000",
     account: "신한은행 000000000000",
   },

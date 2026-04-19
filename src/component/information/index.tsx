@@ -4,6 +4,8 @@ import { Button } from "../button"
 import { LazyDiv } from "../lazyDiv"
 import { useModal } from "../modal"
 import { AttendanceInfo } from "./attendance"
+import PhoneIcon from "../../icons/phone-flip-icon.svg?react"
+import EnvelopeIcon from "../../icons/envelope-icon.svg?react"
 
 export const Information1 = () => {
   return (
@@ -12,12 +14,134 @@ export const Information1 = () => {
       <div className="info-card">
         <div className="label">식사 안내</div>
         <div className="content">
-          식사시간: 12시 30분 ~ 14시 30분
+          식사시간: 13시 30분 ~ 15시 30분
           <br />
-          장소: 지하 1층 연회장
+          장소: 1층 연회장
+          <br />
+          * 1부 진행 중에도 2층에서 식사 가능합니다.
         </div>
       </div>
     </>
+  )
+}
+
+export const InformationContact = () => {
+  const { openModal, closeModal } = useModal()
+
+  return (
+    <div className="info-card">
+      <div className="label">연락하기</div>
+
+      <Button
+        style={{ width: "100%" }}
+        onClick={() => {
+          openModal({
+            className: "contact-modal",
+            closeOnClickBackground: true,
+            header: (
+              <div className="title-group">
+                <div className="title">신랑측 연락하기</div>
+                <div className="subtitle">
+                  전화, 문자메세지로 축하 인사를 전해보세요.
+                </div>
+              </div>
+            ),
+            content: (
+              <div className="contact-info">
+                {GROOM_INFO.filter(({ phone }) => !!phone).map(
+                  ({ relation, name, phone }) => (
+                    <Fragment key={relation}>
+                      <div className="relation">{relation}</div>
+                      <div>{name}</div>
+                      <div>
+                        <PhoneIcon
+                          className="flip icon"
+                          onClick={() => {
+                            window.open(`tel:${phone}`, "_self")
+                          }}
+                        />
+                        <EnvelopeIcon
+                          className="icon"
+                          onClick={() => {
+                            window.open(`sms:${phone}`, "_self")
+                          }}
+                        />
+                      </div>
+                    </Fragment>
+                  ),
+                )}
+              </div>
+            ),
+            footer: (
+              <Button
+                buttonStyle="style2"
+                className="bg-light-grey-color text-dark-color"
+                onClick={closeModal}
+              >
+                닫기
+              </Button>
+            ),
+          })
+        }}
+      >
+        신랑측 연락하기
+      </Button>
+      <div className="break" />
+      <Button
+        style={{ width: "100%" }}
+        onClick={() => {
+          openModal({
+            className: "contact-modal",
+            closeOnClickBackground: true,
+            header: (
+              <div className="title-group">
+                <div className="title">신부측 연락하기</div>
+                <div className="subtitle">
+                  전화, 문자메세지로 축하 인사를 전해보세요.
+                </div>
+              </div>
+            ),
+            content: (
+              <div className="contact-info">
+                {BRIDE_INFO.filter(({ phone }) => !!phone).map(
+                  ({ relation, name, phone }) => (
+                    <Fragment key={relation}>
+                      <div className="relation">{relation}</div>
+                      <div>{name}</div>
+                      <div>
+                        <PhoneIcon
+                          className="flip icon"
+                          onClick={() => {
+                            window.open(`tel:${phone}`, "_self")
+                          }}
+                        />
+                        <EnvelopeIcon
+                          className="icon"
+                          onClick={() => {
+                            window.open(`sms:${phone}`, "_self")
+                          }}
+                        />
+                      </div>
+                    </Fragment>
+                  ),
+                )}
+              </div>
+            ),
+            footer: (
+              <Button
+                buttonStyle="style2"
+                className="bg-light-grey-color text-dark-color"
+                onClick={closeModal}
+              >
+                닫기
+              </Button>
+            ),
+          })
+        }}
+      >
+        신부측 연락하기
+      </Button>
+    </div>
   )
 }
 
@@ -156,6 +280,9 @@ export const Information = () => {
           <Information1 />
         </LazyDiv>
         <LazyDiv className="card information">
+          <InformationContact />
+        </LazyDiv>
+        <LazyDiv className="card information">
           <Information2 />
         </LazyDiv>
       </>
@@ -165,6 +292,7 @@ export const Information = () => {
   return (
     <LazyDiv className="card information">
       <Information1 />
+      <InformationContact />
       <Information2 />
       <AttendanceInfo />
     </LazyDiv>

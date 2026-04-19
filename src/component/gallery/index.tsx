@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import ArrowLeft from "../../icons/angle-left-sm.svg?react"
 import { LazyDiv } from "../lazyDiv"
-import { Button } from "../button"
-import { useModal } from "../modal"
 import { GALLERY_IMAGES } from "../../images"
 
 const CAROUSEL_ITEMS = GALLERY_IMAGES.map((item, idx) => (
@@ -31,7 +29,6 @@ type DragOption = {
 type ClickMove = "left" | "right" | null
 
 export const Gallery = () => {
-  const { openModal, closeModal } = useModal()
   const carouselRef = useRef<HTMLDivElement>({} as HTMLDivElement)
 
   useEffect(() => {
@@ -353,53 +350,21 @@ export const Gallery = () => {
             />
           ))}
         </div>
+
+        <div className="film-strip" aria-label="사진 썸네일 목록">
+          {GALLERY_IMAGES.map((image, idx) => (
+            <button
+              key={idx}
+              className={`film-frame${idx === slide ? " active" : ""}`}
+              onClick={() =>
+                onIndicatorClick(statusRef.current, slideRef.current, idx)
+              }
+            >
+              <img src={image} alt={`gallery thumbnail ${idx + 1}`} />
+            </button>
+          ))}
+        </div>
       </div>
-
-      <div className="break" />
-
-      <Button
-        onClick={() =>
-          openModal({
-            className: "all-photo-modal",
-            closeOnClickBackground: true,
-            header: <div className="title">사진 전체보기</div>,
-            content: (
-              <>
-                <div className="photo-list">
-                  {GALLERY_IMAGES.map((image, idx) => (
-                    <img
-                      key={idx}
-                      src={image}
-                      alt={`${idx}`}
-                      draggable={false}
-                      onClick={() => {
-                        if (statusRef.current === "stationary") {
-                          if (idx !== slideRef.current) {
-                            move(slideRef.current, idx)
-                          }
-                          closeModal()
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="break" />
-              </>
-            ),
-            footer: (
-              <Button
-                buttonStyle="style2"
-                className="bg-light-grey-color text-dark-color"
-                onClick={closeModal}
-              >
-                닫기
-              </Button>
-            ),
-          })
-        }
-      >
-        사진 전체보기
-      </Button>
     </LazyDiv>
   )
 }

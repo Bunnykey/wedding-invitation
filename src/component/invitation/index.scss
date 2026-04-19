@@ -1,14 +1,55 @@
 .invitation {
+  .intro-band {
+    position: relative;
+    height: 3rem;
+    margin: 1rem 0;
+  }
+
+  .intro-heading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - 15px));
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 550;
+    color: #3d3832;
+    width: 100%;
+  }
+
+  .poem {
+    width: min(100%, 17.5rem);
+    margin: 0 auto;
+    text-align: left;
+  }
+
   .content {
-    margin-top: 0.8rem;
-    margin-bottom: 0.8rem;
+    margin-top: 0.64rem;
+    margin-bottom: 0.64rem;
     font-size: 0.9rem;
+    line-height: 1.44;
+
+    &.citation {
+      color: #3d3832c7;
+      font-size: calc(0.9rem - 1px);
+    }
   }
 
   .name {
     margin-top: 1rem;
     margin-bottom: 1rem;
     font-size: 1.1rem;
+
+    &.first-name {
+      margin-top: 1.55rem;
+      margin-bottom: 0.6rem;
+    }
+
+    &.second-name {
+      margin-top: 0.8rem;
+      margin-bottom: 1.45rem;
+    }
+
     .relation {
       font-size: 0.75rem;
       opacity: 0.7;
