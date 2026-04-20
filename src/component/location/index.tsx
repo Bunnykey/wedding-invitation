@@ -23,31 +23,21 @@ export const Location = () => {
           <div className="heading">대중교통</div>
           <div />
           <div className="content">
-            * 지하철 이용 시 (셔틀버스 탑승)
+            셔틀 버스 이용 안내
             <br />
-            1. 지하철 <b>수서역 4번 출구</b> 직진
+            * 예식 1시간 전부터 <b>10~15분 간격</b>으로 운행
             <br />
-            → 투썸플레이스(수서타워) 끼고 좌회전
+            - 지하철 <b>수서역 4번 출구</b> {">"} 직진 후 투썸플레이스를 끼고
+            좌회전 {">"} 맞은편 노란색 셔틀 버스 탑승
             <br />
-            → 맞은편 <b>노란색 셔틀버스</b> 탑승
+            - <b>SRT 수서역 1번 출구</b> {">"} 30m 직진 후 우회전 {">"} 기아오토큐
+            수서서비스 맞은편 노란색 셔틀 버스 탑승
           </div>
           <div />
           <div className="content">
-            2. <b>SRT 수서역 1번 출구</b> 도보 30m 직진 후 우회전
+            버스 이용 시 안내
             <br />
-            → 기아서비스 맞은편 <b>노란색 셔틀버스</b> 탑승
-            <br />
-            * 예식 1시간 전부터 <b>10~15분 간격</b>으로 셔틀 운행
-          </div>
-          <div />
-          <div className="content">
-            * 버스 이용 시
-            <br />
-            <b>강남한양수자인 APT 정류장</b> 하차
-            <br />
-            → 도보 10분 내외
-            <br />
-            지선 <b>3426</b>, 간선 <b>402</b>
+            - <b>강남한양수자인아파트 정류장</b> 하차 후 도보 이용 (10분 내외)
           </div>
         </div>
         <div className="location-info">
@@ -57,21 +47,12 @@ export const Location = () => {
           <div className="heading">자가용</div>
           <div />
           <div className="content">
-            * 무료 하객 전용 주차장
+            자가용 주차 안내
             <br />
-            <b>송파구 충민로 10</b> (문정동)
+            - <b>밤고개로21길 공영주차장</b>(서울 강남구 율현동 527) 주차
             <br />
-            <b>가든5</b> 서측(e-mart) 입구
-            <br />
-            → <b>B5층 B구역</b> 주차 후 1층 이동
-          </div>
-          <div />
-          <div className="content">
-            * 셔틀버스 이용 시
-            <br />
-            <b>5번/6번 gate</b> 출구 앞
-            <b> 노란색 셔틀버스 </b>
-            탑승 (셔틀버스 약 3분 거리)
+            - <b>가든5</b> 서측(e-mart) 입구 <b>B5층 B구역</b> 주차 {">"} 1층
+            <b> 5번/6번 gate</b> 출구 앞 셔틀 버스 탑승
           </div>
         </div>
       </LazyDiv>

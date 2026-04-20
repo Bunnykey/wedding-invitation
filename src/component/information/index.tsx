@@ -1,3 +1,4 @@
+import { Fragment } from "react/jsx-runtime"
 import { BRIDE_INFO, GROOM_INFO } from "../../const"
 import { STATIC_ONLY } from "../../env"
 import { Button } from "../button"
@@ -17,8 +18,6 @@ export const Information1 = () => {
           식사시간: 13시 30분 ~ 15시 30분
           <br />
           장소: 1층 연회장
-          <br />
-          * 1부 진행 중에도 2층에서 식사 가능합니다.
         </div>
       </div>
     </>
@@ -153,7 +152,7 @@ export const Information2 = () => {
       <div className="info-card">
         <div className="label">마음 전하기</div>
         <div className="content">
-          참석이 어려워 직접 축하해주지 못하는
+          참석이 어려워 직접 축하해주시지 못하는
           <br />
           분들을 위해 계좌번호를 기재하였습니다.
           <br />
