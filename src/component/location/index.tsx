@@ -20,11 +20,9 @@ export const Location = () => {
           <div className="transportation-icon-wrapper">
             <BusIcon className="transportation-icon" />
           </div>
-          <div className="heading">대중교통</div>
+          <div className="heading">셔틀버스</div>
           <div />
           <div className="content">
-            셔틀 버스 이용 안내
-            <br />
             * 예식 1시간 전부터 <b>10~15분 간격</b>으로 운행
             <br />
             - 지하철 <b>수서역 4번 출구</b> {">"} 직진 후 투썸플레이스를 끼고
@@ -32,12 +30,6 @@ export const Location = () => {
             <br />
             - <b>SRT 수서역 1번 출구</b> {">"} 30m 직진 후 우회전 {">"} 기아오토큐
             수서서비스 맞은편 노란색 셔틀 버스 탑승
-          </div>
-          <div />
-          <div className="content">
-            버스 이용 시 안내
-            <br />
-            - <b>강남한양수자인아파트 정류장</b> 하차 후 도보 이용 (10분 내외)
           </div>
         </div>
         <div className="location-info">
@@ -47,8 +39,6 @@ export const Location = () => {
           <div className="heading">자가용</div>
           <div />
           <div className="content">
-            자가용 주차 안내
-            <br />
             - <b>밤고개로21길 공영주차장</b>(서울 강남구 율현동 527) 주차
             <br />
             - <b>가든5</b> 서측(e-mart) 입구 <b>B5층 B구역</b> 주차 {">"} 1층
