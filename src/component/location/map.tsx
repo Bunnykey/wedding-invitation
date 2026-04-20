@@ -36,6 +36,110 @@ const NaverMap = () => {
     }
   }
 
+  const openWithFallback = (
+    appUrl: string,
+    fallback: (() => void) | string,
+    timeout = 900,
+  ) => {
+    let handled = false
+
+    const cleanup = () => {
+      window.removeEventListener("blur", onHandled)
+      document.removeEventListener("visibilitychange", onVisibility)
+    }
+
+    const onHandled = () => {
+      handled = true
+      cleanup()
+    }
+
+    const onVisibility = () => {
+      if (document.hidden) {
+        handled = true
+        cleanup()
+      }
+    }
+
+    window.addEventListener("blur", onHandled)
+    document.addEventListener("visibilitychange", onVisibility)
+    window.location.href = appUrl
+
+    window.setTimeout(() => {
+      cleanup()
+      if (handled) return
+
+      if (typeof fallback === "string") {
+        window.open(fallback, "_blank")
+      } else {
+        fallback()
+      }
+    }, timeout)
+  }
+
+  const openNaverMap = () => {
+    const webUrl = `https://map.naver.com/p/entry/place/${NMAP_PLACE_ID}`
+
+    switch (checkDevice()) {
+      case "ios":
+      case "android":
+        openWithFallback(`nmap://place?id=${NMAP_PLACE_ID}`, webUrl)
+        break
+      default:
+        window.open(webUrl, "_blank")
+        break
+    }
+  }
+
+  const openKakaoNavi = () => {
+    const webUrl = `https://map.kakao.com/link/map/${KMAP_PLACE_ID}`
+
+    switch (checkDevice()) {
+      case "ios":
+      case "android":
+        if (kakao?.Navi) {
+          try {
+            kakao.Navi.start({
+              name: LOCATION,
+              x: WEDDING_HALL_POSITION[0],
+              y: WEDDING_HALL_POSITION[1],
+              coordType: "wgs84",
+            })
+            return
+          } catch {
+            window.open(webUrl, "_blank")
+            return
+          }
+        }
+        window.open(webUrl, "_blank")
+        break
+      default:
+        window.open(webUrl, "_blank")
+        break
+    }
+  }
+
+  const openTmap = () => {
+    const params = new URLSearchParams({
+      goalx: WEDDING_HALL_POSITION[0].toString(),
+      goaly: WEDDING_HALL_POSITION[1].toString(),
+      goalname: LOCATION,
+    })
+
+    switch (checkDevice()) {
+      case "ios":
+      case "android":
+        openWithFallback(`tmap://route?${params.toString()}`, () => {
+          alert(
+            "티맵 앱이 설치되어 있지 않거나 인앱브라우저 제한으로 열리지 않을 수 있습니다. 티맵 앱에서 '빌라드지디 수서'를 검색해주세요.",
+          )
+        })
+        break
+      default:
+        alert("모바일에서 확인하실 수 있습니다.")
+        break
+    }
+  }
+
   useEffect(() => {
     if (naver) {
       const map = new naver.maps.Map(ref.current, {
@@ -103,69 +207,18 @@ const NaverMap = () => {
       </div>
       <div className="navigation">
         <button
-          onClick={() => {
-            switch (checkDevice()) {
-              case "ios":
-              case "android":
-                window.open(`nmap://place?id=${NMAP_PLACE_ID}`, "_self")
-                break
-              default:
-                window.open(
-                  `https://map.naver.com/p/entry/place/${NMAP_PLACE_ID}`,
-                  "_blank",
-                )
-                break
-            }
-          }}
+          onClick={openNaverMap}
         >
           <img src={nmapIcon} alt="naver-map-icon" />
           네이버 지도
         </button>
         <button
-          onClick={() => {
-            switch (checkDevice()) {
-              case "ios":
-              case "android":
-                if (kakao)
-                  kakao.Navi.start({
-                    name: LOCATION,
-                    x: WEDDING_HALL_POSITION[0],
-                    y: WEDDING_HALL_POSITION[1],
-                    coordType: "wgs84",
-                  })
-                break
-              default:
-                window.open(
-                  `https://map.kakao.com/link/map/${KMAP_PLACE_ID}`,
-                  "_blank",
-                )
-                break
-            }
-          }}
+          onClick={openKakaoNavi}
         >
           <img src={knaviIcon} alt="kakao-navi-icon" />
           카카오 내비
         </button>
-        <button
-          onClick={() => {
-            switch (checkDevice()) {
-              case "ios":
-              case "android": {
-                const params = new URLSearchParams({
-                  goalx: WEDDING_HALL_POSITION[0].toString(),
-                  goaly: WEDDING_HALL_POSITION[1].toString(),
-                  goalName: LOCATION,
-                })
-                window.open(`tmap://route?${params.toString()}`, "_self")
-                break
-              }
-              default: {
-                alert("모바일에서 확인하실 수 있습니다.")
-                break
-              }
-            }
-          }}
-        >
+        <button onClick={openTmap}>
           <img src={tmapIcon} alt="t-map-icon" />
           티맵
         </button>
