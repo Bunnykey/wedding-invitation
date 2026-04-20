@@ -24,7 +24,7 @@ export const SHARE_ADDRESS_TITLE = LOCATION
 
 // 네이버 지도 및 카카오 네비게이션에 사용할 좌표. [경도, 위도] 형식.
 // 빌라드지디 수서 좌표
-export const WEDDING_HALL_POSITION = [127.0536, 37.4878]
+export const WEDDING_HALL_POSITION = [127.1150996, 37.4741471]
 
 // 네이버 지도의 웨딩홀 장소 ID
 // TODO: 네이버지도에서 빌라드지디 수서 검색 후 URL에서 확인
