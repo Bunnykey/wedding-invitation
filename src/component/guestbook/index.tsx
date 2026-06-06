@@ -22,6 +22,9 @@ const PAGES_PER_BLOCK = 5
 const POSTS_PER_PAGE = 5
 const LOCAL_GUESTBOOK_KEY = "wedding-invitation:guestbook"
 
+const getTotalPages = (total: number) =>
+  Math.max(1, Math.ceil(total / POSTS_PER_PAGE))
+
 type Post = {
   id: number
   timestamp: number
@@ -404,10 +407,12 @@ const AllGuestBookModal = ({
         if (res.ok) {
           const data = await res.json()
 
+          const nextTotalPages = getTotalPages(data.total)
+
           setPosts(data.posts)
-          setTotalPages(Math.ceil(data.total / POSTS_PER_PAGE))
+          setTotalPages(nextTotalPages)
           if (data.total < offset) {
-            setCurrentPage(Math.ceil(data.total / POSTS_PER_PAGE) - 1)
+            setCurrentPage(nextTotalPages - 1)
           }
           return
         }
@@ -425,7 +430,7 @@ const AllGuestBookModal = ({
       POSTS_PER_PAGE,
     )
     setPosts(localGuestbook.posts)
-    setTotalPages(Math.ceil(localGuestbook.total / POSTS_PER_PAGE))
+    setTotalPages(getTotalPages(localGuestbook.total))
   }
 
   useEffect(() => {
