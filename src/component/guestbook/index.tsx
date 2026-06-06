@@ -3,7 +3,6 @@ import { Button } from "../button"
 import { dayjs } from "../../const"
 import { LazyDiv } from "../lazyDiv"
 import { useModal } from "../modal"
-import offlineGuestBook from "./offlineGuestBook.json"
 import { SERVER_URL } from "../../env"
 
 const RULES = {
@@ -21,12 +20,89 @@ const RULES = {
 
 const PAGES_PER_BLOCK = 5
 const POSTS_PER_PAGE = 5
+const LOCAL_GUESTBOOK_KEY = "wedding-invitation:guestbook"
 
 type Post = {
   id: number
   timestamp: number
   name: string
   content: string
+}
+
+type LocalPost = Post & {
+  password: string
+}
+
+const getLocalPosts = (): LocalPost[] => {
+  try {
+    const value = window.localStorage.getItem(LOCAL_GUESTBOOK_KEY)
+    if (!value) return []
+
+    const posts = JSON.parse(value)
+    if (!Array.isArray(posts)) return []
+
+    return posts.filter(
+      (post): post is LocalPost =>
+        typeof post.id === "number" &&
+        typeof post.timestamp === "number" &&
+        typeof post.name === "string" &&
+        typeof post.content === "string" &&
+        typeof post.password === "string",
+    )
+  } catch {
+    return []
+  }
+}
+
+const saveLocalPosts = (posts: LocalPost[]) => {
+  window.localStorage.setItem(LOCAL_GUESTBOOK_KEY, JSON.stringify(posts))
+}
+
+const toPublicPost = (post: LocalPost): Post => ({
+  id: post.id,
+  timestamp: post.timestamp,
+  name: post.name,
+  content: post.content,
+})
+
+const loadLocalPosts = (offset: number, limit: number) => {
+  const posts = getLocalPosts().map(toPublicPost)
+
+  return {
+    posts: posts.slice(offset, offset + limit),
+    total: posts.length,
+  }
+}
+
+const createLocalPost = (name: string, content: string, password: string) => {
+  const posts = getLocalPosts()
+  const id = Math.max(0, ...posts.map((post) => post.id)) + 1
+
+  saveLocalPosts([
+    {
+      id,
+      timestamp: dayjs().unix(),
+      name,
+      content,
+      password,
+    },
+    ...posts,
+  ])
+}
+
+const deleteLocalPost = (id: number, password: string) => {
+  const posts = getLocalPosts()
+  const post = posts.find((post) => post.id === id)
+
+  if (!post) {
+    throw new Error("POST_NOT_FOUND")
+  }
+
+  if (post.password !== password) {
+    throw new Error("INCORRECT_PASSWORD")
+  }
+
+  saveLocalPosts(posts.filter((post) => post.id !== id))
 }
 
 export const GuestBook = () => {
@@ -44,13 +120,14 @@ export const GuestBook = () => {
           const data = await res.json()
 
           setPosts(data.posts)
+          return
         }
       } catch (error) {
         console.error("Error loading posts:", error)
       }
-    } else {
-      setPosts(offlineGuestBook.slice(0, 3))
     }
+
+    setPosts(loadLocalPosts(0, 3).posts)
   }
 
   useEffect(() => {
@@ -69,39 +146,37 @@ export const GuestBook = () => {
             <button
               className="close-button"
               onClick={async () => {
-                if (SERVER_URL) {
-                  openModal({
-                    className: "delete-guestbook-modal",
-                    closeOnClickBackground: false,
-                    header: <div className="title">삭제하시겠습니까?</div>,
-                    content: (
-                      <DeleteGuestBookModal
-                        postId={post.id}
-                        onSuccess={() => {
-                          loadPosts()
-                        }}
-                      />
-                    ),
-                    footer: (
-                      <>
-                        <Button
-                          buttonStyle="style2"
-                          type="submit"
-                          form="guestbook-delete-form"
-                        >
-                          삭제하기
-                        </Button>
-                        <Button
-                          buttonStyle="style2"
-                          className="bg-light-grey-color text-dark-color"
-                          onClick={closeModal}
-                        >
-                          닫기
-                        </Button>
-                      </>
-                    ),
-                  })
-                }
+                openModal({
+                  className: "delete-guestbook-modal",
+                  closeOnClickBackground: false,
+                  header: <div className="title">삭제하시겠습니까?</div>,
+                  content: (
+                    <DeleteGuestBookModal
+                      postId={post.id}
+                      onSuccess={() => {
+                        loadPosts()
+                      }}
+                    />
+                  ),
+                  footer: (
+                    <>
+                      <Button
+                        buttonStyle="style2"
+                        type="submit"
+                        form="guestbook-delete-form"
+                      >
+                        삭제하기
+                      </Button>
+                      <Button
+                        buttonStyle="style2"
+                        className="bg-light-grey-color text-dark-color"
+                        onClick={closeModal}
+                      >
+                        닫기
+                      </Button>
+                    </>
+                  ),
+                })
               }}
             />
           </div>
@@ -119,48 +194,44 @@ export const GuestBook = () => {
 
       <div className="break" />
 
-      {SERVER_URL && (
-        <>
-          <Button
-            onClick={() =>
-              openModal({
-                className: "write-guestbook-modal",
-                closeOnClickBackground: false,
-                header: (
-                  <div className="title-group">
-                    <div className="title">방명록 작성하기</div>
-                    <div className="subtitle">
-                      신랑, 신부에게 축하의 마음을 전해주세요.
-                    </div>
-                  </div>
-                ),
-                content: <WriteGuestBookModal loadPosts={loadPosts} />,
-                footer: (
-                  <>
-                    <Button
-                      buttonStyle="style2"
-                      type="submit"
-                      form="guestbook-write-form"
-                    >
-                      저장하기
-                    </Button>
-                    <Button
-                      buttonStyle="style2"
-                      className="bg-light-grey-color text-dark-color"
-                      onClick={closeModal}
-                    >
-                      닫기
-                    </Button>
-                  </>
-                ),
-              })
-            }
-          >
-            방명록 작성하기
-          </Button>
-          <div className="break" />
-        </>
-      )}
+      <Button
+        onClick={() =>
+          openModal({
+            className: "write-guestbook-modal",
+            closeOnClickBackground: false,
+            header: (
+              <div className="title-group">
+                <div className="title">방명록 작성하기</div>
+                <div className="subtitle">
+                  신랑, 신부에게 축하의 마음을 전해주세요.
+                </div>
+              </div>
+            ),
+            content: <WriteGuestBookModal loadPosts={loadPosts} />,
+            footer: (
+              <>
+                <Button
+                  buttonStyle="style2"
+                  type="submit"
+                  form="guestbook-write-form"
+                >
+                  저장하기
+                </Button>
+                <Button
+                  buttonStyle="style2"
+                  className="bg-light-grey-color text-dark-color"
+                  onClick={closeModal}
+                >
+                  닫기
+                </Button>
+              </>
+            ),
+          })
+        }
+      >
+        방명록 작성하기
+      </Button>
+      <div className="break" />
 
       <Button
         onClick={() =>
@@ -237,15 +308,28 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
             return
           }
 
-          const res = await fetch(`${SERVER_URL}/guestbook`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, content, password }),
-          })
-          if (!res.ok) {
-            throw new Error(res.statusText)
+          let saved = false
+
+          if (SERVER_URL) {
+            try {
+              const res = await fetch(`${SERVER_URL}/guestbook`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, content, password }),
+              })
+
+              if (res.ok) {
+                saved = true
+              }
+            } catch (error) {
+              console.error("Error creating post:", error)
+            }
+          }
+
+          if (!saved) {
+            createLocalPost(name, content, password)
           }
 
           alert("방명록 작성이 완료되었습니다.")
@@ -320,21 +404,19 @@ const AllGuestBookModal = ({
           if (data.total < offset) {
             setCurrentPage(Math.ceil(data.total / POSTS_PER_PAGE) - 1)
           }
+          return
         }
       } catch (error) {
         console.error("Error loading posts:", error)
       }
-    } else {
-      setCurrentPage(page)
-
-      setPosts(
-        offlineGuestBook.slice(
-          page * POSTS_PER_PAGE,
-          (page + 1) * POSTS_PER_PAGE,
-        ),
-      )
-      setTotalPages(Math.ceil(offlineGuestBook.length / POSTS_PER_PAGE))
     }
+
+    const localGuestbook = loadLocalPosts(
+      page * POSTS_PER_PAGE,
+      POSTS_PER_PAGE,
+    )
+    setPosts(localGuestbook.posts)
+    setTotalPages(Math.ceil(localGuestbook.total / POSTS_PER_PAGE))
   }
 
   useEffect(() => {
@@ -356,40 +438,38 @@ const AllGuestBookModal = ({
             <div
               className="close-button"
               onClick={async () => {
-                if (SERVER_URL) {
-                  openModal({
-                    className: "delete-guestbook-modal",
-                    closeOnClickBackground: false,
-                    header: <div className="title">삭제하시겠습니까?</div>,
-                    content: (
-                      <DeleteGuestBookModal
-                        postId={post.id}
-                        onSuccess={() => {
-                          loadPosts()
-                          loadPage(currentPage)
-                        }}
-                      />
-                    ),
-                    footer: (
-                      <>
-                        <Button
-                          buttonStyle="style2"
-                          type="submit"
-                          form="guestbook-delete-form"
-                        >
-                          삭제하기
-                        </Button>
-                        <Button
-                          buttonStyle="style2"
-                          className="bg-light-grey-color text-dark-color"
-                          onClick={closeModal}
-                        >
-                          닫기
-                        </Button>
-                      </>
-                    ),
-                  })
-                }
+                openModal({
+                  className: "delete-guestbook-modal",
+                  closeOnClickBackground: false,
+                  header: <div className="title">삭제하시겠습니까?</div>,
+                  content: (
+                    <DeleteGuestBookModal
+                      postId={post.id}
+                      onSuccess={() => {
+                        loadPosts()
+                        loadPage(currentPage)
+                      }}
+                    />
+                  ),
+                  footer: (
+                    <>
+                      <Button
+                        buttonStyle="style2"
+                        type="submit"
+                        form="guestbook-delete-form"
+                      >
+                        삭제하기
+                      </Button>
+                      <Button
+                        buttonStyle="style2"
+                        className="bg-light-grey-color text-dark-color"
+                        onClick={closeModal}
+                      >
+                        닫기
+                      </Button>
+                    </>
+                  ),
+                })
               }}
             />
           </div>
@@ -477,19 +557,41 @@ const DeleteGuestBookModal = ({
             return
           }
 
-          const result = await fetch(`${SERVER_URL}/guestbook`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: postId, password }),
-          })
+          let deleted = false
 
-          if (!result.ok) {
-            if (result.status === 403) {
-              alert("비밀번호가 일치하지 않습니다.")
-            } else {
-              alert("방명록 삭제에 실패했습니다.")
+          if (SERVER_URL) {
+            try {
+              const result = await fetch(`${SERVER_URL}/guestbook`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: postId, password }),
+              })
+
+              if (result.ok) {
+                deleted = true
+              } else if (result.status === 403) {
+                alert("비밀번호가 일치하지 않습니다.")
+                return
+              }
+            } catch (error) {
+              console.error("Error deleting post:", error)
             }
-            return
+          }
+
+          if (!deleted) {
+            try {
+              deleteLocalPost(postId, password)
+            } catch (error) {
+              if (
+                error instanceof Error &&
+                error.message === "INCORRECT_PASSWORD"
+              ) {
+                alert("비밀번호가 일치하지 않습니다.")
+              } else {
+                alert("방명록 삭제에 실패했습니다.")
+              }
+              return
+            }
           }
 
           alert("삭제되었습니다.")

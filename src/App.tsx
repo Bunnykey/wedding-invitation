@@ -9,7 +9,6 @@ import { Information } from "./component/information"
 import { GuestBook } from "./component/guestbook"
 import { LazyDiv } from "./component/lazyDiv"
 import { ShareButton } from "./component/shareButton"
-import { STATIC_ONLY } from "./env"
 
 function App() {
   return (
@@ -41,7 +40,7 @@ function App() {
           {/* 마음 전하기 */}
           <Information />
           {/* 방명록 */}
-          {!STATIC_ONLY && <GuestBook />}
+          <GuestBook />
         </LazyDiv>
 
         <ShareButton />
