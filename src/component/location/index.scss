@@ -63,6 +63,18 @@
       height: 100%;
       width: 100%;
     }
+    .map-fallback {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background-color: var(--alt-bg-color);
+      color: rgba(61, 56, 50, 0.72);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
   }
 
   .navigation {
