@@ -125,6 +125,9 @@ export const GuestBook = () => {
       } catch (error) {
         console.error("Error loading posts:", error)
       }
+
+      setPosts([])
+      return
     }
 
     setPosts(loadLocalPosts(0, 3).posts)
@@ -326,9 +329,11 @@ const WriteGuestBookModal = ({ loadPosts }: { loadPosts: () => void }) => {
             } catch (error) {
               console.error("Error creating post:", error)
             }
-          }
 
-          if (!saved) {
+            if (!saved) {
+              throw new Error("SERVER_CREATE_FAILED")
+            }
+          } else {
             createLocalPost(name, content, password)
           }
 
@@ -409,6 +414,10 @@ const AllGuestBookModal = ({
       } catch (error) {
         console.error("Error loading posts:", error)
       }
+
+      setPosts([])
+      setTotalPages(1)
+      return
     }
 
     const localGuestbook = loadLocalPosts(
@@ -576,9 +585,12 @@ const DeleteGuestBookModal = ({
             } catch (error) {
               console.error("Error deleting post:", error)
             }
-          }
 
-          if (!deleted) {
+            if (!deleted) {
+              alert("방명록 삭제에 실패했습니다.")
+              return
+            }
+          } else {
             try {
               deleteLocalPost(postId, password)
             } catch (error) {

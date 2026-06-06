@@ -10,7 +10,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "worker:dev": "npx wrangler dev",
+    "worker:deploy": "npx wrangler deploy",
+    "d1:migrate": "npx wrangler d1 migrations apply DB --remote"
   },
   "dependencies": {
     "@types/node": "^24.0.15",
