@@ -11,6 +11,9 @@ const RULES = {
   passwordMaxLength: 20,
 }
 
+const ATTENDANCE_SIDES = new Set(["groom", "bride"])
+const ATTENDANCE_MEALS = new Set(["yes", "undecided", "no"])
+
 const json = (value, init = {}) =>
   new Response(JSON.stringify(value), {
     ...init,
@@ -219,6 +222,43 @@ const handleGuestbook = async (request, env, url) => {
   return text("Method Not Allowed", { status: 405 })
 }
 
+const handleAttendance = async (request, env) => {
+  if (request.method !== "POST") {
+    return text("Method Not Allowed", { status: 405 })
+  }
+
+  const body = await request.json()
+  const side = assertString(body.side, 1, 20)
+  const name = assertString(body.name, 1, RULES.nameMaxLength)
+  const meal = assertString(body.meal, 1, 20)
+  const count = Number(body.count)
+
+  if (
+    !ATTENDANCE_SIDES.has(side) ||
+    !ATTENDANCE_MEALS.has(meal) ||
+    !Number.isInteger(count) ||
+    count < 0
+  ) {
+    return text("Bad Request", { status: 400 })
+  }
+
+  const timestamp = Math.floor(Date.now() / 1000)
+  const result = await env.DB.prepare(
+    "INSERT INTO attendance (timestamp, side, name, meal, attendee_count) VALUES (?, ?, ?, ?, ?)",
+  )
+    .bind(timestamp, side, name, meal, count)
+    .run()
+
+  return json({
+    id: result.meta.last_row_id,
+    timestamp,
+    side,
+    name,
+    meal,
+    count,
+  })
+}
+
 export default {
   async fetch(request, env) {
     const headers = corsHeaders(request)
@@ -240,6 +280,10 @@ export default {
 
       if (url.pathname === "/guestbook" || url.pathname === "/api/guestbook") {
         return withCors(await handleGuestbook(request, env, url), headers)
+      }
+
+      if (url.pathname === "/attendance" || url.pathname === "/api/attendance") {
+        return withCors(await handleAttendance(request, env), headers)
       }
 
       return withCors(text("Not Found", { status: 404 }), headers)
