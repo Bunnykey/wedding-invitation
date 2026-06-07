@@ -1,17 +1,10 @@
 import {
-  BRIDE_FULLNAME,
   dayjs,
-  GROOM_FULLNAME,
-  LOCATION,
   WEDDING_DATE,
-  WEDDING_DATE_FORMAT,
 } from "../../const"
 import { Button } from "../button"
 import { useModal } from "../modal"
-import { useEffect, useRef, useState } from "react"
-import HeartIcon from "../../icons/heart-icon.svg?react"
-import CalendarIcon from "../../icons/calendar-icon.svg?react"
-import MarkerIcon from "../../icons/marker-icon.svg?react"
+import { useRef, useState } from "react"
 import { SERVER_URL } from "../../env"
 
 const RULES = {
@@ -25,65 +18,8 @@ const RULES = {
 }
 
 export const AttendanceInfo = () => {
-  const { openModal, closeModal } = useModal()
-
-  const initialized = useRef(false)
-
+  const { openModal } = useModal()
   const now = useRef(dayjs())
-
-  useEffect(() => {
-    if (initialized.current) return
-    initialized.current = true
-
-    if (!SERVER_URL || WEDDING_DATE.isBefore(now.current)) return
-
-    openModal({
-      className: "attendance-info-modal",
-      header: <div className="title">참석 의사 전달 안내</div>,
-      content: (
-        <>
-          <div className="info-message">
-            축하의 마음으로 참석해주시는
-            <br />
-            모든 분들을 귀하게 모실 수 있도록
-            <br />
-            참석 및 식사 여부를 미리 여쭙고자 합니다.
-            <div className="break" />
-            부담없이 알려주시면
-            <br />
-            정성껏 준비하겠습니다.
-          </div>
-          <div className="wedding-info">
-            <HeartIcon /> 신랑 {GROOM_FULLNAME} & 신부 {BRIDE_FULLNAME}
-            <br />
-            <CalendarIcon /> {WEDDING_DATE.format(WEDDING_DATE_FORMAT)}
-            <br />
-            <MarkerIcon /> {LOCATION}
-          </div>
-        </>
-      ),
-      footer: (
-        <>
-          <Button
-            buttonStyle="style2"
-            onClick={() => {
-              closeModal()
-              openModal(attendanceModalInfo)
-            }}
-          >
-            참석 의사 전달하기
-          </Button>
-          <Button
-            buttonStyle="style2"
-            className="bg-light-grey-color text-dark-color"
-            onClick={closeModal}
-          >
-            닫기
-          </Button>
-        </>
-      ),
-    })
-  }, [openModal, closeModal])
 
   if (!SERVER_URL || WEDDING_DATE.isBefore(now.current)) return null
 
@@ -137,7 +73,7 @@ const AttendanceModalContent = () => {
         try {
           const side = inputRef.current.side.groom.checked
             ? "groom"
-            : inputRef.current.side.bride
+            : inputRef.current.side.bride.checked
               ? "bride"
               : null
           const name = inputRef.current.name.value

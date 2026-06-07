@@ -30,6 +30,20 @@ export const Location = () => {
             <br />
             - <b>SRT 수서역 1번 출구</b> {">"} 30m 직진 후 우회전 {">"} 기아오토큐
             수서서비스 맞은편 노란색 셔틀 버스 탑승
+            <div className="shuttle-section">
+              <b>대구 출발 버스</b>
+              <br />- 오전 8시 30분, 대구 성서 홈플러스 앞 출발
+              <br />
+              <span className="indent">(대구70바7353, 새천년관광)</span>
+              <br />
+              <span className="indent">
+                * 기사님 연락처 : 010-4340-4455
+              </span>
+              <br />
+              <span className="indent">
+                ** 비상 연락처 (이정임) : 010-9522-3788
+              </span>
+            </div>
           </div>
         </div>
         <div className="location-info">

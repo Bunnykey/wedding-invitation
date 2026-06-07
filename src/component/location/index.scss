@@ -133,6 +133,15 @@
     .content {
       font-size: 0.9rem;
       line-height: 1.4;
+
+      .shuttle-section {
+        margin-top: 1rem;
+      }
+
+      .indent {
+        display: inline-block;
+        padding-left: 0.8rem;
+      }
     }
   }
 }
