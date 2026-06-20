@@ -32,12 +32,12 @@ import image30 from "./image30.jpeg"
 export const COVER_IMAGE = image1
 
 export const GALLERY_IMAGES = [
-  image1,
   image2,
   image3,
   image4,
   image5,
   image6,
+  image1,
   image7,
   image8,
   image9,
