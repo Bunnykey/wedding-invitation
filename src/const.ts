@@ -26,13 +26,13 @@ export const SHARE_ADDRESS_TITLE = LOCATION
 // 빌라드지디 수서 좌표
 export const WEDDING_HALL_POSITION = [127.1150996, 37.4741471]
 
-// 네이버 지도의 웨딩홀 장소 ID
-// TODO: 네이버지도에서 빌라드지디 수서 검색 후 URL에서 확인
-export const NMAP_PLACE_ID = 1966109955
+// 네이버 지도 URL Scheme의 필수 파라미터. 웹은 배포 URL을 사용한다.
+// https://guide.ncloud-docs.com/docs/maps-url-scheme
+export const NMAP_APP_NAME = "bunnykey.github.io"
 
 // 카카오 지도의 웨딩홀 장소 ID
-// TODO: 카카오지도에서 빌라드지디 수서 검색 후 URL에서 확인
-export const KMAP_PLACE_ID = 1804498588
+// https://place.map.kakao.com/1610731648 -> 빌라드지디 수서
+export const KMAP_PLACE_ID = 1610731648
 
 export const BRIDE_FULLNAME = "채나율"
 export const BRIDE_FIRSTNAME = "나율"
@@ -70,7 +70,7 @@ export const GROOM_INFO = [
     relation: "신랑 아버지",
     name: GROOM_FATHER,
     phone: "010-2272-7558",
-    account: "하나은행 428 91009099 2007",
+    account: "하나은행 42891009992007",
   },
   {
     relation: "신랑 어머니",

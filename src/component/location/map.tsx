@@ -8,7 +8,7 @@ import UnlockIcon from "../../icons/unlock-icon.svg?react"
 import {
   KMAP_PLACE_ID,
   LOCATION,
-  NMAP_PLACE_ID,
+  NMAP_APP_NAME,
   WEDDING_HALL_POSITION,
 } from "../../const"
 import { NAVER_MAP_CLIENT_ID } from "../../env"
@@ -78,13 +78,20 @@ export const Map = () => {
   }
 
   const openNaverMap = () => {
-    const webUrl = `https://map.naver.com/p/entry/place/${NMAP_PLACE_ID}`
+    const webUrl = `https://map.naver.com/p/search/${encodeURIComponent(LOCATION)}`
 
     switch (checkDevice()) {
       case "ios":
-      case "android":
-        openWithFallback(`nmap://place?id=${NMAP_PLACE_ID}`, webUrl)
+      case "android": {
+        // 공백은 %20으로 인코딩한다. URLSearchParams는 +로 인코딩해 앱에서 장소명이 깨진다.
+        const appUrl =
+          `nmap://place?lat=${WEDDING_HALL_POSITION[1]}` +
+          `&lng=${WEDDING_HALL_POSITION[0]}` +
+          `&name=${encodeURIComponent(LOCATION)}` +
+          `&appname=${NMAP_APP_NAME}`
+        openWithFallback(appUrl, webUrl)
         break
+      }
       default:
         window.open(webUrl, "_blank")
         break
